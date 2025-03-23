@@ -6,9 +6,9 @@ import time
 st.set_page_config(page_title="FinTrack: Salary & Tax Analyzer", page_icon="💼", layout="wide")
 
 # Title of the application
-st.title("💼 FinTrack: Salary & Tax Analyzer")
+st.title("🧾 FinTrack: Salary & Tax Analyzer")
 # st.image("att.jpg", use_container_width=False, width=600)
-# Sidebar content
+
 st.sidebar.header("📊 New vs. Old Tax Regime")
 st.sidebar.image("tax.png", caption="Comparison of New vs. Old Tax Regime", use_container_width=True)
 st.sidebar.write("### Compare Old vs. New Tax Regime")
@@ -24,7 +24,7 @@ col1, col2 = st.columns(2)
 
 with col1:
     # User input for Total Fixed Pay
-    total_fixed_pay = st.number_input("Enter Total Fixed Pay:", min_value=0, value=123456, step=1000)
+    total_fixed_pay = st.number_input("Enter Total Fixed Pay:", min_value=0, value=0, step=1000)
 
 with col2:
     # User input for Target CIP Bonus Variable Pay Percentage
@@ -51,17 +51,17 @@ gratuity = round(gratuity1 / 12)
 # Creating a DataFrame to display salary components
 data = {
     "Components": [
-        "Basic Pay (50% of Total Fixed Pay)",
-        "House Rent Allowance (HRA, 50% of Basic)",
-        "Special Allowance",
-        "Leave Travel Allowance (LTA)",
-        "**Total Fixed Pay**",
-        f"Target CIP Bonus Variable Pay ({cip_bonus_percentage * 100:.1f}%)",
-        "**Total Cash**",
-        "Company Provident Fund (12% of Basic)",
-        "Telephone Reimbursement",
-        "Gratuity",
-        "**Cost to Company (CTC)**"
+        "🏦 **Basic Pay** (50% of Total Fixed Pay)",
+        "🏡 **House Rent Allowance (HRA)** (50% of Basic)",
+        "🎁 **Special Allowance**",
+        "🛫**Leave Travel Allowance (LTA)**",
+        "💰 **Total Fixed Pay**",
+        f"🎯 **Target CIP Bonus Variable Pay** ({cip_bonus_percentage * 100:.1f}%)",
+        "💵 **Total Cash**",
+        "🏛️ Company Provident Fund (12% of Basic)",
+        "📞 **Telephone Reimbursement**",
+        "📜  **Gratuity**",
+        "💼 **Cost to Company (CTC)**"
     ],
     "Monthly in INR": [
         round(basic_pay / 12),
@@ -147,30 +147,32 @@ taxable_income_new = max(0, taxable_income_new)  # Example value
 
 old_tax = calculate_tax(taxable_income_old, old_tax_slabs)
 new_tax = calculate_tax(taxable_income_new, new_tax_slabs)
-
-# Display tax calculation results
 if st.button("🔎 Compare Tax Regimes", use_container_width=True):
     st.toast("🔄 Fetching best tax-saving options...", icon="💡")
     time.sleep(2)
 # Display tax calculation results
     st.write("### Tax Calculation Results")
-    st.write(f"**Tax Under Old Regime:** ₹{old_tax:,.2f}")
-    st.write(f"**Tax Under New Regime:** ₹{new_tax:,.2f}")
+    col6, col7 = st.columns(2)
+    with col6:
+        st.metric(label="📜 **Tax (Old Regime)**", value=f"₹{old_tax:,.2f}")
+    with col7:
+        st.metric(label="📄 **Tax (New Regime)**", value=f"₹{new_tax:,.2f}")
     tax_savings = old_tax - new_tax
+    tax_savings_percentage = (tax_savings / old_tax * 100) if old_tax > 0 else 0
+
+    # Show tax savings using st.metric
     if tax_savings > 0:
         st.toast(f"✅ You save ₹{tax_savings:,.2f} by choosing the New Regime! 🎉", icon="🎉")
+        col8 = st.columns(1)  # Single column for emphasis
+        with col8[0]:
+            st.metric(label="📉 **Tax Savings**", value=f"₹{round(tax_savings):,}", delta=f"{tax_savings_percentage:.2f}% 💰")
     elif tax_savings < 0:
-        st.toast(f"The Old Regime might be better for you, as you pay ₹{-tax_savings:,.2f} less tax.", icon="⚠️")
+        st.toast(f"⚠️ The Old Regime might be better, as you pay ₹{-tax_savings:,.2f} less tax.", icon="⚠️")
+        col8 = st.columns(1)
+        with col8[0]:
+            st.metric(label="📈 **Additional Tax Paid**", value=f"₹{round(-tax_savings):,}", delta=f"{-tax_savings_percentage:.2f}% 🔺", delta_color="inverse")
     else:
-        st.toast("Both tax regimes result in the same tax amount.", icon="ℹ️")
-
-# if tax_savings > 0:
-#     st.success(f"✅ You save **₹{tax_savings:,.2f}** by choosing the **New Regime**! 🎉")
-# elif tax_savings < 0:
-#     st.warning(f"⚠️ The **Old Regime** might be better for you, as you pay ₹{-tax_savings:,.2f} less tax.")
-# else:
-#     st.info("ℹ️ Both tax regimes result in the same tax amount.")
-
-
-
-
+        st.toast("ℹ️ Both tax regimes result in the same tax amount.", icon="ℹ️")
+        col8 = st.columns(1)
+        with col8[0]:
+            st.metric(label="📊 **No Difference in Tax**", value="₹0", delta="0.00%")
