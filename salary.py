@@ -153,11 +153,17 @@ st.write(f"**Tax Under Old Regime:** ₹{old_tax:,.2f}")
 st.write(f"**Tax Under New Regime:** ₹{new_tax:,.2f}")
 tax_savings = old_tax - new_tax
 if tax_savings > 0:
-    st.success(f"✅ You save **₹{tax_savings:,.2f}** by choosing the **New Regime**! 🎉")
+    st.toast(f"✅ You save ₹{tax_savings:,.2f} by choosing the New Regime! 🎉", icon="🎉")
 elif tax_savings < 0:
-    st.warning(f"⚠️ The **Old Regime** might be better for you, as you pay ₹{-tax_savings:,.2f} less tax.")
+    st.toast(f"The Old Regime might be better for you, as you pay ₹{-tax_savings:,.2f} less tax.", icon="⚠️")
 else:
-    st.info("ℹ️ Both tax regimes result in the same tax amount.")
+    st.toast("Both tax regimes result in the same tax amount.", icon="ℹ️")
+# if tax_savings > 0:
+#     st.success(f"✅ You save **₹{tax_savings:,.2f}** by choosing the **New Regime**! 🎉")
+# elif tax_savings < 0:
+#     st.warning(f"⚠️ The **Old Regime** might be better for you, as you pay ₹{-tax_savings:,.2f} less tax.")
+# else:
+#     st.info("ℹ️ Both tax regimes result in the same tax amount.")
 
 
 
