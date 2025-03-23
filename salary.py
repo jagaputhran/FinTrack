@@ -8,7 +8,7 @@ st.set_page_config(page_title="FinTrack: Salary & Tax Analyzer", page_icon="💼
 st.title("💼 FinTrack: Salary & Tax Analyzer")
 # st.image("att.jpg", use_container_width=False, width=600)
 # Sidebar content
-st.sidebar.header("New vs. Old Tax Regime")
+st.sidebar.header("📊 New vs. Old Tax Regime")
 st.sidebar.image("tax.png", caption="Comparison of New vs. Old Tax Regime", use_container_width=True)
 st.sidebar.write("### Compare Old vs. New Tax Regime")
 st.sidebar.markdown("[Click here to compare tax regimes and savings](https://1finance.co.in/calculator/old-vs-new)", unsafe_allow_html=True)
@@ -148,16 +148,21 @@ old_tax = calculate_tax(taxable_income_old, old_tax_slabs)
 new_tax = calculate_tax(taxable_income_new, new_tax_slabs)
 
 # Display tax calculation results
-st.write("### Tax Calculation Results")
-st.write(f"**Tax Under Old Regime:** ₹{old_tax:,.2f}")
-st.write(f"**Tax Under New Regime:** ₹{new_tax:,.2f}")
-tax_savings = old_tax - new_tax
-if tax_savings > 0:
-    st.toast(f"✅ You save ₹{tax_savings:,.2f} by choosing the New Regime! 🎉", icon="🎉")
-elif tax_savings < 0:
-    st.toast(f"The Old Regime might be better for you, as you pay ₹{-tax_savings:,.2f} less tax.", icon="⚠️")
-else:
-    st.toast("Both tax regimes result in the same tax amount.", icon="ℹ️")
+if st.button("🔎 Compare Tax Regimes", use_container_width=True):
+    st.toast("🔄 Fetching best tax-saving options...", icon="💡")
+    time.sleep(2)
+# Display tax calculation results
+    st.write("### Tax Calculation Results")
+    st.write(f"**Tax Under Old Regime:** ₹{old_tax:,.2f}")
+    st.write(f"**Tax Under New Regime:** ₹{new_tax:,.2f}")
+    tax_savings = old_tax - new_tax
+    if tax_savings > 0:
+        st.toast(f"✅ You save ₹{tax_savings:,.2f} by choosing the New Regime! 🎉", icon="🎉")
+    elif tax_savings < 0:
+        st.toast(f"The Old Regime might be better for you, as you pay ₹{-tax_savings:,.2f} less tax.", icon="⚠️")
+    else:
+        st.toast("Both tax regimes result in the same tax amount.", icon="ℹ️")
+
 # if tax_savings > 0:
 #     st.success(f"✅ You save **₹{tax_savings:,.2f}** by choosing the **New Regime**! 🎉")
 # elif tax_savings < 0:
