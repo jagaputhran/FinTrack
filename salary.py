@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import time
+import plotly.graph_objects as go
 
 # Set page configuration
 st.set_page_config(page_title="FinTrack: Salary & Tax Analyzer", page_icon="💼", layout="wide")
@@ -250,3 +251,38 @@ if st.button("🔎 Compare Tax Regimes", use_container_width=True):
         col8 = st.columns(1)
         with col8[0]:
             st.metric(label="📊 **No Difference in Tax**", value="₹0", delta="0.00%")
+
+    fig = go.Figure()
+    fig.add_trace(go.Bar(x=["Old Regime", "New Regime"], 
+                        y=[old_tax_final, new_tax_final], 
+                        text=[f"₹{old_tax_final:,.2f}", f"₹{new_tax_final:,.2f}"],
+                        textposition="auto",
+                        marker_color=["red", "green"]))  # Red for higher tax, Green for savings
+    fig.add_shape(
+    type="line",
+    x0="Old Regime", y0=old_tax_final,
+    x1="New Regime", y1=new_tax_final,
+    line=dict(color="blue", width=3, dash="dashdot")  # Blue dashed line
+)
+
+# Add an annotation to show the savings difference
+    fig.add_annotation(
+        x="New Regime",
+        y=(old_tax_final + new_tax_final) / 2,  # Mid-point
+        text=f"💰 Savings: ₹{tax_savings:,.2f}",
+        showarrow=False,
+        arrowhead=2,
+        ax=-50,  # Adjust arrow positioning
+        ay=40,
+        font=dict(size=14, color="black"),
+        bgcolor="lightyellow",
+        bordercolor="black"
+    )
+    fig.update_layout(
+        title="Visualize tax comparison!!",
+        xaxis_title="Tax Regime",
+        yaxis_title="Tax Amount (INR)",
+        template="plotly_white",
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
