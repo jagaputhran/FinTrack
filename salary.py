@@ -55,12 +55,35 @@ st.markdown(
 st.title("🧾 J'FinTrack: Salary & Tax Analyzer")
 # st.image("att.jpg", use_container_width=False, width=600)
 
-st.sidebar.header("📊 New vs. Old Tax Regime")
-st.sidebar.image("tax.png", caption="Comparison of New vs. Old Tax Regime", use_container_width=True)
-st.sidebar.write("### Compare Old vs. New Tax Regime")
-st.sidebar.markdown("[Click here to compare tax regimes and savings](https://1finance.co.in/calculator/old-vs-new)", unsafe_allow_html=True)
-st.sidebar.write("### Income Tax Calculator - Govt Portal")
-st.sidebar.markdown("[Click here to open the Income Tax Calculator](https://incometaxindia.gov.in/pages/tools/tax-calculator.aspx)")
+st.sidebar.markdown(
+    """
+    <div style="background-color:#ffcc00; padding:10px; border-radius:10px; text-align:center; font-weight:bold;">
+        ⚖️ Compare New vs. Old Tax Regime & Save More!
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+st.sidebar.image("tax.png", caption="🔍 Tax Regime Comparison", use_container_width=True)
+
+st.sidebar.markdown(
+    """
+    <div style="padding:8px; background-color:#f8f9fa; border-radius:8px;">
+        💰 Want to maximize your savings? Compare the old and new tax regimes now!
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+st.sidebar.markdown("[🟢 Additional External link for comparison ](https://1finance.co.in/calculator/old-vs-new)", unsafe_allow_html=True)
+
+
+
+# 🏛 Income Tax Calculator (Govt. Portal)
+st.sidebar.write("### 🏛 Income Tax Calculator - Govt Portal")
+
+
+st.sidebar.markdown("[🔵 Open the Govt. Income Tax Calculator](https://incometaxindia.gov.in/pages/tools/tax-calculator.aspx)", unsafe_allow_html=True)
 
 # Main content
 st.write("## Enter Your Details")
