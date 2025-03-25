@@ -52,7 +52,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 # Title of the application
-st.title("🧾 FinTrack: Salary & Tax Analyzer")
+st.title("🧾 J'FinTrack: Salary & Tax Analyzer")
 # st.image("att.jpg", use_container_width=False, width=600)
 
 st.sidebar.header("📊 New vs. Old Tax Regime")
