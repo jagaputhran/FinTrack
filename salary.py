@@ -122,7 +122,7 @@ taxable_income_old = total_fixed_pay + cip_bonus - total_deductions - 50000  # O
 taxable_income_new = total_fixed_pay + cip_bonus - 75000
 
 # Function to calculate tax under different regimes
-def calculate_tax(income, slabs, new_regime=False)):
+def calculate_tax(income, slabs, new_regime=False):
     tax = 0
     previous_limit = 0
 
