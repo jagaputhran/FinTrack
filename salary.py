@@ -53,7 +53,8 @@ st.markdown(
     unsafe_allow_html=True
 )
 # Title of the application
-st.title("🧾 J'FinTrack: Salary & Tax Analyzer")
+st.title("🧾 FinTrack: Salary & Tax Analyzer")
+st.caption("Developed by **Jagaputhran S** ") 
 # st.image("att.jpg", use_container_width=False, width=600)
 
 st.sidebar.markdown(
