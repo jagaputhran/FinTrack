@@ -4,7 +4,53 @@ import time
 
 # Set page configuration
 st.set_page_config(page_title="FinTrack: Salary & Tax Analyzer", page_icon="💼", layout="wide")
+marquee_html = """
+<div style="position:fixed; top:0; left:0; width:100%; background-color:#ffcc00; padding:10px 0; z-index:9999; text-align:center;">
+    <p id="marqueeText" style="display:inline-block; font-size:18px; font-weight:bold; white-space: nowrap;">
+       📢 New Tax Regime 2025: Lower Taxes, Bigger Savings! 🚀  
+    💰 Slabs: ₹0-4L (0%) | ₹4L-8L (5%) | ₹8L-12L (10%) | ₹12L-16L (15%) | ₹16L-20L (20%) | ₹20L-24L (25%) | ₹24L+ (30%) 💼  
+🔍 Compare & Optimize Your Tax! Check Now! 📊  
+    </p>
+</div>
 
+<script>
+function animateMarquee() {
+    let text = document.getElementById("marqueeText");
+    let screenWidth = window.innerWidth;
+    let textWidth = text.offsetWidth;
+    let startPos = screenWidth;
+    let endPos = -textWidth;
+    let currentPos = startPos;
+
+    function step() {
+        if (currentPos <= endPos) {
+            currentPos = startPos;
+        } else {
+            currentPos -= 2;
+        }
+        text.style.transform = "translateX(" + currentPos + "px)";
+        requestAnimationFrame(step);
+    }
+    step();
+}
+animateMarquee();
+</script>
+"""
+
+# Inject Marquee into Streamlit
+st.components.v1.html(marquee_html, height=50)
+
+# ✅ Add spacing below marquee to prevent overlap with content
+st.markdown(
+    """
+    <style>
+    h1 {
+        margin-top: -20px; /* Adjust this value to reduce space */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 # Title of the application
 st.title("🧾 FinTrack: Salary & Tax Analyzer")
 # st.image("att.jpg", use_container_width=False, width=600)
