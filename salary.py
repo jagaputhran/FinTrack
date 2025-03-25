@@ -68,7 +68,7 @@ st.sidebar.image("tax.png", caption="🔍 Tax Regime Comparison", use_container_
 
 st.sidebar.markdown(
     """
-    <div style="padding:8px; background-color:#f8f9fa; border-radius:8px;">
+    <div style="padding:8px; background-color:#ffcc00; border-radius:8px;">
         💰 Want to maximize your savings? Compare the old and new tax regimes now!
     </div>
     """,
