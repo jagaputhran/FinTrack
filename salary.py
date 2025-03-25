@@ -54,7 +54,7 @@ st.markdown(
 )
 # Title of the application
 st.title("🧾 FinTrack: Salary & Tax Analyzer")
-st.caption("Developed with ❤️ by **Jagaputhran S** 👨‍💻")
+st.caption("Developed by **Jagaputhran S** 👨‍💻")
 # st.image("att.jpg", use_container_width=False, width=600)
 
 st.sidebar.markdown(
