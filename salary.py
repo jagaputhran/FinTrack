@@ -122,7 +122,7 @@ taxable_income_old = total_fixed_pay + cip_bonus - total_deductions - 50000  # O
 taxable_income_new = total_fixed_pay + cip_bonus - 75000
 
 # Function to calculate tax under different regimes
-def calculate_tax(income, slabs):
+def calculate_tax(income, slabs, new_regime=False)):
     tax = 0
     previous_limit = 0
 
@@ -133,7 +133,8 @@ def calculate_tax(income, slabs):
         else:
             tax += (income - previous_limit) * rate  # Tax for the remaining income
             break  # Stop as we've taxed the full income
-    
+    if new_regime and income <= 1200000:
+        return 0  # Full rebate under Section 87A
     return tax
 
 # Define tax slabs from the image
@@ -146,7 +147,7 @@ taxable_income_old = max(0, taxable_income_old)  # Ensure non-negative income
 taxable_income_new = max(0, taxable_income_new)  # Example value
 
 old_tax = calculate_tax(taxable_income_old, old_tax_slabs)
-new_tax = calculate_tax(taxable_income_new, new_tax_slabs)
+new_tax = calculate_tax(taxable_income_new, new_tax_slabs, new_regime=True)
 if st.button("🔎 Compare Tax Regimes", use_container_width=True):
     st.toast("🔄 Fetching best tax-saving options...", icon="💡")
     time.sleep(2)
