@@ -194,6 +194,10 @@ taxable_income_new = max(0, taxable_income_new)  # Example value
 
 old_tax = calculate_tax(taxable_income_old, old_tax_slabs)
 new_tax = calculate_tax(taxable_income_new, new_tax_slabs, new_regime=True)
+
+old_tax_final = old_tax + (old_tax * 0.04)
+new_tax_final = new_tax + (new_tax * 0.04)
+
 if st.button("🔎 Compare Tax Regimes", use_container_width=True):
     st.toast("🔄 Fetching best tax-saving options...", icon="💡")
     time.sleep(2)
@@ -201,11 +205,11 @@ if st.button("🔎 Compare Tax Regimes", use_container_width=True):
     st.write("### Tax Calculation Results")
     col6, col7 = st.columns(2)
     with col6:
-        st.metric(label="📜 **Tax (Old Regime)**", value=f"₹{old_tax:,.2f}")
+        st.metric(label="📜 **Tax (Old Regime)**", value=f"₹{old_tax_final:,.2f}")
     with col7:
-        st.metric(label="📄 **Tax (New Regime)**", value=f"₹{new_tax:,.2f}")
-    tax_savings = old_tax - new_tax
-    tax_savings_percentage = (tax_savings / old_tax * 100) if old_tax > 0 else 0
+        st.metric(label="📄 **Tax (New Regime)**", value=f"₹{new_tax_final:,.2f}")
+    tax_savings = old_tax_final - new_tax_final
+    tax_savings_percentage = (tax_savings / old_tax_final * 100) if old_tax_final > 0 else 0
 
     # Show tax savings using st.metric
     if tax_savings > 0:
