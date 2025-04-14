@@ -59,7 +59,7 @@
 ## **🎯 Why Use FinTrack?**  
 📉 **Make informed salary & tax decisions** with clear breakdowns.  
 💡 **Instantly see the best tax-saving regime** without manual calculations.  
-🚀 **Fast, interactive, and mobile-friendly** without any complex setups.  
+🚀 **Fast, interactive, and mobile-friendly** without any complex setups  
 🔒 **Privacy-first with zero data retention**—your financial data remains yours!  
 
 ---
