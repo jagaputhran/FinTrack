@@ -4,3 +4,4 @@ tabulate
 plotly
 streamlit-chat
 google-generativeai
+python-dotenv
