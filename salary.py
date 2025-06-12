@@ -327,7 +327,7 @@ st.markdown('''
 #fintrack-chat-btn:hover {
     box-shadow: 0 8px 32px rgba(0,0,0,0.25);
 }
-#fintrack-chat-popup {
+#fintrack-chat-popup-st {
     position: fixed;
     bottom: 120px;
     right: 40px;
@@ -339,12 +339,8 @@ st.markdown('''
     z-index: 10001;
     padding: 16px 12px 12px 12px;
     border: 2px solid #ffcc00;
-    display: none;
 }
-#fintrack-chat-popup.active {
-    display: block;
-}
-#fintrack-chat-popup .close-btn {
+#fintrack-chat-popup-st .close-btn {
     position: absolute;
     top: 8px;
     right: 16px;
@@ -353,49 +349,45 @@ st.markdown('''
     cursor: pointer;
 }
 </style>
-<div id="fintrack-chat-btn" onclick="document.getElementById('fintrack-chat-popup').classList.toggle('active')">
+''', unsafe_allow_html=True)
+
+# Floating button triggers session state
+if 'show_chat_popup' not in st.session_state:
+    st.session_state['show_chat_popup'] = False
+
+# Render floating button
+st.markdown('''
+<div id="fintrack-chat-btn" onclick="window.dispatchEvent(new CustomEvent('fintrack_chat_open'))">
     <span style="font-size:32px;">💬</span>
 </div>
-<div id="fintrack-chat-popup">
-    <span class="close-btn" onclick="document.getElementById('fintrack-chat-popup').classList.remove('active')">&times;</span>
-    <div id="fintrack-chat-streamlit"></div>
-</div>
 <script>
-// Ensure popup closes if user clicks outside
-window.addEventListener('click', function(e) {
-    var popup = document.getElementById('fintrack-chat-popup');
-    var btn = document.getElementById('fintrack-chat-btn');
-    if (popup.classList.contains('active') && !popup.contains(e.target) && !btn.contains(e.target)) {
-        popup.classList.remove('active');
-    }
+window.addEventListener('fintrack_chat_open', function() {
+    window.parent.postMessage({isStreamlitMessage: true, type: 'streamlit:setComponentValue', key: 'show_chat_popup', value: true}, '*');
 });
 </script>
 ''', unsafe_allow_html=True)
 
-# Use session state to control chat popup visibility
-if "show_chat_popup" not in st.session_state:
-    st.session_state["show_chat_popup"] = False
+# Streamlit workaround for button click
+if st.button("", key="open_chat_popup_btn", help="Open Chat", args=(), kwargs={}, use_container_width=False):
+    st.session_state['show_chat_popup'] = True
 
-# Use a Streamlit container to render chat UI inside the popup
-with st.container():
-    # This container will be injected into the popup via JS/CSS
-    st.markdown('<div id="fintrack-chat-streamlit-anchor"></div>', unsafe_allow_html=True)
-    if st.session_state.get("show_chat_popup", False):
-        st.markdown("<style>#fintrack-chat-popup{display:block!important;}</style>", unsafe_allow_html=True)
-        st.markdown("<style>#fintrack-chat-btn{display:none!important;}</style>", unsafe_allow_html=True)
-        # Chat UI
-        st.write("### 💬 Chat with FinTrack Bot")
-        if "messages" not in st.session_state:
-            st.session_state["messages"] = []
-        for msg in st.session_state["messages"]:
-            message(msg["content"], is_user=(msg["role"] == "user"))
-        user_input = st.text_input("You:", key="user_input", value="", placeholder="Type your message and press Enter...")
-        if user_input:
-            bot_response = get_gemini_response(user_input)
-            st.session_state["messages"].append({"role": "user", "content": user_input})
-            st.session_state["messages"].append({"role": "bot", "content": bot_response})
-            st.session_state["user_input"] = ""  # Clear input manually
-            st._rerun()
+# Show chat popup if toggled
+if st.session_state['show_chat_popup']:
+    st.markdown('<div id="fintrack-chat-popup-st">', unsafe_allow_html=True)
+    st.markdown('<span class="close-btn" onclick="window.parent.postMessage({isStreamlitMessage: true, type: \'streamlit:setComponentValue\', key: \'show_chat_popup\', value: false}, \'*\')">&times;</span>', unsafe_allow_html=True)
+    st.write("### 💬 Chat with FinTrack Bot")
+    if "messages" not in st.session_state:
+        st.session_state["messages"] = []
+    for msg in st.session_state["messages"]:
+        message(msg["content"], is_user=(msg["role"] == "user"))
+    user_input = st.text_input("You:", key="user_input", value="", placeholder="Type your message and press Enter...")
+    if user_input:
+        bot_response = get_gemini_response(user_input)
+        st.session_state["messages"].append({"role": "user", "content": user_input})
+        st.session_state["messages"].append({"role": "bot", "content": bot_response})
+        st.session_state["user_input"] = ""
+        st._rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # === Place Chat Bot in Expander at Bottom 2 ===
 # with st.expander("💬 Chat with FinTrack Bot", expanded=True):
