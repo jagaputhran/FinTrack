@@ -303,14 +303,29 @@ def get_gemini_response(prompt):
     response = model.generate_content(prompt)
     return response.text
 
+
 # === Place Chat Bot in Expander at Bottom ===
 with st.expander("💬 Chat with FinTrack Bot", expanded=True):
     if "messages" not in st.session_state:
         st.session_state["messages"] = []
-    user_input = st.text_input("You:", key="user_input")
+    # Display all previous messages
+    for msg in st.session_state["messages"]:
+        message(msg["content"], is_user=(msg["role"] == "user"))
+    # Place input at the bottom, and clear after sending
+    user_input = st.text_input("You:", key="user_input", value="", placeholder="Type your message and press Enter...")
     if user_input:
         bot_response = get_gemini_response(user_input)
         st.session_state["messages"].append({"role": "user", "content": user_input})
         st.session_state["messages"].append({"role": "bot", "content": bot_response})
-    for msg in st.session_state["messages"]:
-        message(msg["content"], is_user=(msg["role"] == "user"))
+        st.experimental_rerun()  # Refresh to clear input and show new messages
+# === Place Chat Bot in Expander at Bottom ===
+# with st.expander("💬 Chat with FinTrack Bot", expanded=True):
+#     if "messages" not in st.session_state:
+#         st.session_state["messages"] = []
+#     user_input = st.text_input("You:", key="user_input")
+#     if user_input:
+#         bot_response = get_gemini_response(user_input)
+#         st.session_state["messages"].append({"role": "user", "content": user_input})
+#         st.session_state["messages"].append({"role": "bot", "content": bot_response})
+#     for msg in st.session_state["messages"]:
+#         message(msg["content"], is_user=(msg["role"] == "user"))
