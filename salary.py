@@ -303,21 +303,113 @@ def get_gemini_response(prompt):
     response = model.generate_content(prompt)
     return response.text
 
+# === Floating Chat Button and Popup Chat Window ===
+# Add custom CSS and JS for floating button
+st.markdown('''
+<style>
+#fintrack-chat-btn {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    z-index: 10000;
+    width: 64px;
+    height: 64px;
+    background: #ffcc00;
+    border-radius: 50%;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 3px solid #fff;
+    transition: box-shadow 0.2s;
+}
+#fintrack-chat-btn:hover {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+}
+#fintrack-chat-popup {
+    position: fixed;
+    bottom: 120px;
+    right: 40px;
+    width: 350px;
+    max-width: 90vw;
+    background: #fffbe6;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    z-index: 10001;
+    padding: 16px 12px 12px 12px;
+    border: 2px solid #ffcc00;
+    display: none;
+}
+#fintrack-chat-popup.active {
+    display: block;
+}
+#fintrack-chat-popup .close-btn {
+    position: absolute;
+    top: 8px;
+    right: 16px;
+    font-size: 22px;
+    color: #888;
+    cursor: pointer;
+}
+</style>
+<div id="fintrack-chat-btn" onclick="document.getElementById('fintrack-chat-popup').classList.toggle('active')">
+    <span style="font-size:32px;">💬</span>
+</div>
+<div id="fintrack-chat-popup">
+    <span class="close-btn" onclick="document.getElementById('fintrack-chat-popup').classList.remove('active')">&times;</span>
+    <div id="fintrack-chat-streamlit"></div>
+</div>
+<script>
+// Ensure popup closes if user clicks outside
+window.addEventListener('click', function(e) {
+    var popup = document.getElementById('fintrack-chat-popup');
+    var btn = document.getElementById('fintrack-chat-btn');
+    if (popup.classList.contains('active') && !popup.contains(e.target) && !btn.contains(e.target)) {
+        popup.classList.remove('active');
+    }
+});
+</script>
+''', unsafe_allow_html=True)
 
-# === Place Chat Bot in Expander at Bottom ===
-with st.expander("💬 Chat with FinTrack Bot", expanded=True):
-    if "messages" not in st.session_state:
-        st.session_state["messages"] = []
-    # Display all previous messages
-    for msg in st.session_state["messages"]:
-        message(msg["content"], is_user=(msg["role"] == "user"))
-    # Place input at the bottom, and clear after sending
-    user_input = st.text_input("You:", key="user_input", value="", placeholder="Type your message and press Enter...")
-    if user_input:
-        bot_response = get_gemini_response(user_input)
-        st.session_state["messages"].append({"role": "user", "content": user_input})
-        st.session_state["messages"].append({"role": "bot", "content": bot_response})
-        st.experimental_rerun()  # Refresh to clear input and show new messages
+# Use session state to control chat popup visibility
+if "show_chat_popup" not in st.session_state:
+    st.session_state["show_chat_popup"] = False
+
+# Use a Streamlit container to render chat UI inside the popup
+with st.container():
+    # This container will be injected into the popup via JS/CSS
+    st.markdown('<div id="fintrack-chat-streamlit-anchor"></div>', unsafe_allow_html=True)
+    if st.session_state.get("show_chat_popup", False):
+        st.markdown("<style>#fintrack-chat-popup{display:block!important;}</style>", unsafe_allow_html=True)
+        st.markdown("<style>#fintrack-chat-btn{display:none!important;}</style>", unsafe_allow_html=True)
+        # Chat UI
+        st.write("### 💬 Chat with FinTrack Bot")
+        if "messages" not in st.session_state:
+            st.session_state["messages"] = []
+        for msg in st.session_state["messages"]:
+            message(msg["content"], is_user=(msg["role"] == "user"))
+        user_input = st.text_input("You:", key="user_input", value="", placeholder="Type your message and press Enter...")
+        if user_input:
+            bot_response = get_gemini_response(user_input)
+            st.session_state["messages"].append({"role": "user", "content": user_input})
+            st.session_state["messages"].append({"role": "bot", "content": bot_response})
+            st.experimental_rerun()
+
+# === Place Chat Bot in Expander at Bottom 2 ===
+# with st.expander("💬 Chat with FinTrack Bot", expanded=True):
+#     if "messages" not in st.session_state:
+#         st.session_state["messages"] = []
+#     # Display all previous messages
+#     for msg in st.session_state["messages"]:
+#         message(msg["content"], is_user=(msg["role"] == "user"))
+#     # Place input at the bottom, and clear after sending
+#     user_input = st.text_input("You:", key="user_input", value="", placeholder="Type your message and press Enter...")
+#     if user_input:
+#         bot_response = get_gemini_response(user_input)
+#         st.session_state["messages"].append({"role": "user", "content": user_input})
+#         st.session_state["messages"].append({"role": "bot", "content": bot_response})
+#         st.experimental_rerun()  # Refresh to clear input and show new messages
 # === Place Chat Bot in Expander at Bottom ===
 # with st.expander("💬 Chat with FinTrack Bot", expanded=True):
 #     if "messages" not in st.session_state:
