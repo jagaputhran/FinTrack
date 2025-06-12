@@ -287,3 +287,29 @@ if st.button("🔎 Compare Tax Regimes", use_container_width=True):
     )
 
     st.plotly_chart(fig, use_container_width=True)
+
+
+import google.generativeai as genai
+from streamlit_chat import message
+
+# Set your Google API key
+genai.configure(api_key="AIzaSyBVtrbZsJjT4FFZkQA3LKPx4uuabYAGSio")  # <-- Replace with your actual key
+
+def get_gemini_response(prompt):
+    model = genai.GenerativeModel("gemini-2.0-flash")
+    response = model.generate_content(prompt)
+    return response.text
+
+st.write("## 💬 Chat with FinTrack Bot")
+
+if "messages" not in st.session_state:
+    st.session_state["messages"] = []
+
+user_input = st.text_input("You:", key="user_input")
+if user_input:
+    bot_response = get_gemini_response(user_input)
+    st.session_state["messages"].append({"role": "user", "content": user_input})
+    st.session_state["messages"].append({"role": "bot", "content": bot_response})
+
+for msg in st.session_state["messages"]:
+    message(msg["content"], is_user=(msg["role"] == "user"))
