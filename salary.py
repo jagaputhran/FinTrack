@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import time
 import plotly.graph_objects as go
+from dotenv import load_dotenv
+import os
 
 # Set page configuration
 st.set_page_config(page_title="FinTrack: Salary & Tax Analyzer", page_icon="💼", layout="wide")
