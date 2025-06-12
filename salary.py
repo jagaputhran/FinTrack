@@ -385,7 +385,6 @@ if st.session_state['show_chat_popup']:
         bot_response = get_gemini_response(user_input)
         st.session_state["messages"].append({"role": "user", "content": user_input})
         st.session_state["messages"].append({"role": "bot", "content": bot_response})
-        st.session_state["user_input"] = ""
         st._rerun()
     st.markdown('</div>', unsafe_allow_html=True)
 
