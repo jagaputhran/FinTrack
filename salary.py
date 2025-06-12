@@ -394,7 +394,8 @@ with st.container():
             bot_response = get_gemini_response(user_input)
             st.session_state["messages"].append({"role": "user", "content": user_input})
             st.session_state["messages"].append({"role": "bot", "content": bot_response})
-            st.experimental_rerun()
+            st.session_state["user_input"] = ""  # Clear input manually
+            st._rerun()
 
 # === Place Chat Bot in Expander at Bottom 2 ===
 # with st.expander("💬 Chat with FinTrack Bot", expanded=True):
