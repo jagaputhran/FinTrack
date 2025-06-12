@@ -294,8 +294,9 @@ if st.button("🔎 Compare Tax Regimes", use_container_width=True):
 import google.generativeai as genai
 from streamlit_chat import message
 
-# Set your Google API key
-genai.configure(api_key="AIzaSyBVtrbZsJjT4FFZkQA3LKPx4uuabYAGSio")  # <-- Replace with your actual key
+load_dotenv()
+api_key = os.getenv("GOOGLE_API_KEY")
+genai.configure(api_key=api_key)
 
 def get_gemini_response(prompt):
     model = genai.GenerativeModel("gemini-2.0-flash")
